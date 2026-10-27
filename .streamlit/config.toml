@@ -1,0 +1,10 @@
+[server]
+maxUploadSize = 1000          # MB - drawing sets can be large
+headless = false
+address = "localhost"
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#800000"      # LECGI maroon

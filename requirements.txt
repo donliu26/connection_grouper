@@ -1,0 +1,5 @@
+pymupdf>=1.24
+pandas
+openpyxl
+rapidocr_onnxruntime
+streamlit

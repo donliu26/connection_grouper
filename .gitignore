@@ -1,0 +1,17 @@
+# Client project files and generated outputs
+*.pdf
+*.xlsx
+~$*
+examples/
+
+# Required by the app
+!cg/assets/Letterhead.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Secrets
+.streamlit/secrets.toml

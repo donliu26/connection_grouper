@@ -1,0 +1,14 @@
+{
+  "min_shear_k": 10.0,
+  "hss_beam_shear_k": 15.0,
+  "udl_fraction": 0.5,
+  "moment_default": "ask",
+  "group_by": "shape",
+  "bolts": "3/4\" dia. ASTM F3125 Gr. A325-N, U.N.O.",
+  "materials": [
+    "W shapes: ASTM A992",
+    "Channels, angles, plates: ASTM A36",
+    "Stiffener & doubler plates: ASTM A572 Gr. 50",
+    "HSS: ASTM A500 Gr. C"
+  ]
+}
