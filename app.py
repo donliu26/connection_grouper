@@ -14,7 +14,7 @@ import pandas as pd
 import streamlit as st
 
 from cg import pipeline
-from cg.config import CATEGORIES, load_config
+from cg.config import CATEGORIES, DEFAULTS, load_config
 from cg.letterhead import logo_png
 from cg.report import CONN_COLS, EDITABLE, normalize_rows
 from cg.shapes import ShapeDB
@@ -60,6 +60,7 @@ with st.sidebar:
     project_name = st.text_input("Project name")
     project_location = st.text_input("Project location", placeholder="e.g. Fairfield, Ohio")
     prepared_by = st.text_input("Prepared by")
+    checked_by = st.text_input("Checked by", value=DEFAULTS["checked_by"])
     reviewed_by = st.text_input("Reviewed by")
     approved_by = st.text_input("Approved by", help="Licensed Professional Engineer")
     calc_no = st.text_input("Calc. No.", placeholder="blank = <Project No.>-0001")
@@ -111,7 +112,8 @@ if not up:
 
 pdf_path, pdf_hash = _save_upload(up)
 meta = dict(project_no=project_no, project_name=project_name, drawing=up.name, prepared_by=prepared_by,
-            project_location=project_location, reviewed_by=reviewed_by, approved_by=approved_by, calc_no=calc_no)
+            project_location=project_location, checked_by=checked_by, reviewed_by=reviewed_by,
+            approved_by=approved_by, calc_no=calc_no)
 run_key = (pdf_hash, pages_arg.strip(), scale_arg.strip(), ocr_dpi)
 
 if st.button("Generate connection grouping", type="primary") or st.session_state.get("run_key") == run_key:

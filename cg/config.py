@@ -40,6 +40,7 @@ DEFAULTS = {
     "label_fontsize": 12.0,       # connection numbers on the drawings (plain text along the member)
     "label_color": [0.0, 0.0, 1.0],
     "stamp_fontsize": 7.0,
+    "checked_by": "Don Liu",      # checker shown on every sheet (drawings, calc PDF, Excel)
     "group_by": "shape",          # "shape" (member + support size) | "depth"
 }
 

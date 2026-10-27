@@ -10,7 +10,7 @@ import os
 import sys
 
 from . import pipeline, report
-from .config import load_config
+from .config import DEFAULTS, load_config
 from .shapes import ShapeDB
 
 
@@ -25,7 +25,8 @@ def _db(args):
 def _meta(args):
     return dict(project_no=args.project_no or "", project_name=args.project_name or "",
                 drawing=os.path.basename(args.pdf), prepared_by=args.prepared_by or "",
-                project_location=args.location or "", reviewed_by=args.reviewed_by or "",
+                project_location=args.location or "", checked_by=args.checked_by or "",
+                reviewed_by=args.reviewed_by or "",
                 approved_by=args.approved_by or "", calc_no=args.calc_no or "")
 
 
@@ -111,6 +112,7 @@ def main(argv=None):
         p.add_argument("--project-no")
         p.add_argument("--project-name")
         p.add_argument("--prepared-by")
+        p.add_argument("--checked-by", default=DEFAULTS["checked_by"])
         p.add_argument("--reviewed-by")
         p.add_argument("--approved-by")
         p.add_argument("--location", help="project location for the calculation cover sheet")

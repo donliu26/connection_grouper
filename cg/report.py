@@ -135,8 +135,9 @@ def cover_fields(meta):
     no = meta.get("project_no") or ""
     return dict(calc_no=meta.get("calc_no") or (f"{no}-0001" if no else ""), project_no=no,
                 name=meta.get("project_name") or "", location=meta.get("project_location") or "",
-                prepared=meta.get("prepared_by") or "", reviewed=meta.get("reviewed_by") or "",
-                approved=meta.get("approved_by") or "", date=_calc_date())
+                prepared=meta.get("prepared_by") or "", checked=meta.get("checked_by") or "",
+                reviewed=meta.get("reviewed_by") or "", approved=meta.get("approved_by") or "",
+                date=_calc_date())
 
 
 # =====================================================================
@@ -167,13 +168,13 @@ def _pdf_cover(d, meta):
     for k, (lab, val) in enumerate((("Project Number:", f["project_no"]), ("Project Location:", f["location"]))):
         p.insert_text((90, 232 + 13 * k), lab, fontname="helv", fontsize=8.5)
         p.insert_text((196, 232 + 13 * k), val, fontname="helv", fontsize=10)
-    for k, (lab, val) in enumerate((("Prepared by:", f["prepared"]), ("Reviewed by:", f["reviewed"]),
-                                    ("Approved by:", f["approved"]))):
-        y = 345 + 25 * k
+    for k, (lab, val) in enumerate((("Prepared by:", f["prepared"]), ("Checked by:", f["checked"]),
+                                    ("Reviewed by:", f["reviewed"]), ("Approved by:", f["approved"]))):
+        y = 345 + 20 * k
         p.insert_text((90, y), lab, fontname="helv", fontsize=8.5)
         p.insert_text((196, y), val, fontname="helv", fontsize=9)
         p.draw_line((194, y + 3), (353, y + 3), width=0.8)
-    p.insert_text((196, 408), "Licensed Professional Engineer", fontname="helv", fontsize=8.5)
+    p.insert_text((196, 418), "Licensed Professional Engineer", fontname="helv", fontsize=8.5)
     _ctext(p, 455, 297, "Stamping for Connection Design", "helv", 8)
     _ctext(p, 455, 309, "of Structural Steel Only", "helv", 8)
     p.draw_rect(pymupdf.Rect(378, 315, 538, 435), width=0.6)
@@ -268,6 +269,8 @@ def _pdf_summary(d, groups, cfg):
 def pdf_report(path, groups, rows, page_info, cfg, meta):
     """Structural calculation: cover sheet + Connection Summary on the LECGI letterhead."""
     proj = " - ".join(x for x in (meta.get("project_no"), meta.get("project_name")) if x)
+    if meta.get("checked_by"):
+        proj = " | ".join(x for x in (proj, f"Checked by: {meta['checked_by']}") if x)
     d = LetterheadDoc("CONNECTION DESIGN", proj)
     _pdf_cover(d, meta)
     _pdf_summary(d, groups, cfg)
@@ -299,7 +302,8 @@ def _letterhead_block(ws, title, meta, ncols, logo):
     proj = " - ".join(x for x in (meta.get("project_no"), meta.get("project_name")) if x)
     ws.merge_cells(f"C3:{last}3")
     ws["C3"] = f"Project: {proj or '-'}     Drawings: {meta.get('drawing', '-')}     " \
-               f"Date: {datetime.date.today():%m/%d/%Y}"
+               f"Date: {datetime.date.today():%m/%d/%Y}" \
+               + (f"     Checked by: {meta['checked_by']}" if meta.get("checked_by") else "")
     ws["C3"].font = Font(italic=True, size=9)
     ws.oddFooter.left.text = CONTACT
     ws.oddFooter.left.size = 8
@@ -370,13 +374,13 @@ def _xl_cover(ws, meta, logo):
         for c in "GHI":
             ws[f"{c}{r}"].border = Border(left=thin if c == "G" else None, right=thin if c == "I" else None,
                                           top=thin if r == 18 else None, bottom=thin if r == 24 else None)
-    for r, lab, val in ((19, "Prepared by:", f["prepared"]), (21, "Reviewed by:", f["reviewed"]),
-                        (23, "Approved by:", f["approved"])):
+    for r, lab, val in ((18, "Prepared by:", f["prepared"]), (20, "Checked by:", f["checked"]),
+                        (22, "Reviewed by:", f["reviewed"]), (24, "Approved by:", f["approved"])):
         put(f"B{r}", lab, 9, align="left")
         put(f"D{r}", val, 9, align="left")
         for c in "DEF":
             ws[f"{c}{r}"].border = Border(bottom=med)
-    put("D24", "Licensed Professional Engineer", 9, align="left")
+    put("D25", "Licensed Professional Engineer", 9, align="left")
     # revision table
     for k, row in enumerate([("Rev.", "Revision Description", "Date"), ("0", "First Issue", f["date"])]
                             + [("", "", "")] * 10):

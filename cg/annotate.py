@@ -51,7 +51,7 @@ def _overlap(box, rects):
     return sum(abs(box & q) for q in rects if box.intersects(q)) / max(abs(box), 1e-6)
 
 
-def annotate(doc, rows, cfg, project="", log=print):
+def annotate(doc, rows, cfg, project="", log=print, checked_by=""):
     fs = cfg["label_fontsize"]
     color = tuple(cfg["label_color"])
     by_page, by_member = {}, {}
@@ -86,19 +86,20 @@ def annotate(doc, rows, cfg, project="", log=print):
             pt, ang, box = min(_candidates(e, u, tw, fs), key=score)
             placed.append(box)
             page.insert_text(pt, text, fontname="helv", fontsize=fs, rotate=ang, color=color)
-        _stamp(page, cfg["stamp_fontsize"], color, project, len(rs))
+        _stamp(page, cfg["stamp_fontsize"], color, project, len(rs), checked_by)
         if rot:
             page.set_rotation(rot)
         log(f"  page {pno}: {len(rs)} connection marks")
 
 
-def _stamp(page, fs, color, project, n):
+def _stamp(page, fs, color, project, n, checked_by=""):
     lines = [
         "CONNECTION NUMBERS - LECGI",
         f"{project}".strip(),
         f"{n} connections marked on this sheet. See Connection Summary for loads.",
         f"Marks: BB beam-beam, BC beam-column, MBB/MBC moment, BR brace, TR truss. "
         f"Issued {datetime.date.today():%m/%d/%Y}",
+        f"Checked by: {checked_by}" if checked_by else "",
     ]
     lines = [s for s in lines if s]
     w = max(pymupdf.get_text_length(s, fontname="helv", fontsize=fs) for s in lines) + 10

@@ -48,7 +48,7 @@ def write_drawing_outputs(pdf_path, rows, groups, info, cfg, meta, outdir, log=p
     proj = " - ".join(x for x in (meta.get("project_no"), meta.get("project_name")) if x)
     marked = os.path.join(outdir, f"{base}_CONN_MARKS.pdf")
     with pymupdf.open(pdf_path) as doc:
-        annotate.annotate(doc, rows, cfg, proj, log)
+        annotate.annotate(doc, rows, cfg, proj, log, meta.get("checked_by") or "")
         doc.save(marked, garbage=3, deflate=True)
     sched = os.path.join(outdir, f"{base}_CONN_SCHEDULE.pdf")
     report.pdf_report(sched, groups, rows, info, cfg, meta)

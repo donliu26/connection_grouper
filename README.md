@@ -66,8 +66,10 @@ python -m cg build "S-drawings.pdf" "S-drawings_review.xlsx" --ask --project-no 
 | `<name>_CONN_SCHEDULE.pdf` | Structural calculation: cover sheet + Connection Summary (letterhead) |
 | `<name>_CONN_SCHEDULE.xlsx` | Cover, Connection Summary, Group Schedule, Connections, Needs Input, Criteria |
 
-Cover sheet fields: `--location`, `--prepared-by`, `--reviewed-by`, `--approved-by`, `--calc-no`
-(default `<project-no>-0001`). The web app has the same fields in the sidebar.
+Cover sheet fields: `--location`, `--prepared-by`, `--checked-by`, `--reviewed-by`, `--approved-by`, `--calc-no`
+(default `<project-no>-0001`). The web app has the same fields in the sidebar. The checker
+(default **Don Liu**, `checked_by` in `cg/config.py`) is also printed on every marked drawing sheet,
+every calculation page and every Excel worksheet.
 
 ### Connection Summary
 
